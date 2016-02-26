@@ -26,6 +26,6 @@ public interface ODESystem {
 	 * @param values
 	 * @return
 	 */
-	double[] getFunction(double time, double[] values);
+	double[][] getFunction(double time, double[] values);
 	
 } // end ODESystem interface

@@ -5,24 +5,57 @@
  */
 
 public class ParticleManager {
-	
+
 	private double deltaT;
-	private ODESystem star;
-	
-	public ParticleManager(double timeInterval, ODESystem star) throws IllegalTimeIntervalException {
+	private double time;
+	private Star star;
+	private RungeKuttaSolver solver;
+
+	public ParticleManager(double timeInterval, Star fireworkStar, RungeKuttaSolver rKSolver) throws IllegalTimeIntervalException {
+		if(timeInterval <= 0 || timeInterval > 0.05) {
+			throw new IllegalTimeIntervalException("The supplied time interval was not" +
+					"greater than 0 and less than or equal to 0.05 seconds.");
+		}
 		setDeltaT(timeInterval);
+		setTime();
+		setStar(fireworkStar);
+		setSolver(rKSolver);
 	} // end full constructor
-	
-	private void setDeltaT (double interval) {
+
+	public void setDeltaT (double interval) {
 		deltaT = interval;
 	}
+
+	private void setTime() {
+		time = 0;
+	}
 	
+	private void setStar(Star fireworkStar) {
+		star = fireworkStar;
+	}
+	
+	private void setSolver(RungeKuttaSolver rKSolver) {
+		solver = rKSolver;
+	}
+
 	private double getDeltaT() {
 		return deltaT;
 	}
 
-	public static double[][] getPath (double vxInitial, double vyInitial, double vWind) {
-		int numPoints = (int)Math.round(star.getInitialMass() / star.getBurnRate() / getDeltaT() ) + 1;
+	private double getTime() {
+		return time;
+	}
+	
+	private Star getStar() {
+		return star;
+	}
+	
+	private RungeKuttaSolver getSolver() {
+		return solver;
+	}
+
+	public double[][] getPath (double vxInitial, double vyInitial, double vWind) {
+		int numPoints = (int)Math.round(getStar().getInitialMass() / getStar().getBurnRate() / getDeltaT() ) + 1;
 		double[][] points = new double[numPoints][3];
 		double[] newVals = new double[2];
 		double vx, vy;
@@ -35,16 +68,16 @@ public class ParticleManager {
 		vx = vxInitial;
 		vy = vyInitial;
 		for (int i = 1; i < numPoints; i++) {
-			newVals = estimateVelocity(time, vx, vy, vWind);
+			newVals = getSolver().solve(getTime(), getDeltaT());
 			vx = newVals[0];
 			vy = newVals[1];
-			time = time + DELTA_T;
+			time = time + getDeltaT();
 			points[i][0] = time;
 			// Calculation the positions
-			points[i][1] = points[i - 1][1] + vx * DELTA_T;
-			points[i][2] = points[i - 1][2] + vy * DELTA_T;
+			points[i][1] = points[i - 1][1] + vx * getDeltaT();
+			points[i][2] = points[i - 1][2] + vy * getDeltaT();
 		}
 		return points;
 	} // end getPath
-	
+
 } // end ParticleManager class

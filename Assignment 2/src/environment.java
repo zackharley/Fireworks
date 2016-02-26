@@ -8,15 +8,17 @@ public class Environment {
 	private double windVelocity;	// m/s
 	private double airDensity;		// kg/m*m*m
 	private double dragCoeff;		// unitless
+	private double gravity;			// m/s*s
 	
 	public Environment(double windV) throws IllegalWindVelocityException {
-		if (windV > 20 || windV < 20){
+		if (windV > 20 || windV < -20){
 			throw new IllegalWindVelocityException("The supplied wind velocity was not" +
-					"between -20 and 20 m/s, inclusive.");
+					" between -20 and 20 m/s, inclusive.");
 		}
 		setWindVelocity(windV);
 		setAirDensity();
 		setDragCoeff();
+		setGravity();
 	} // end full constructor
 
 	private void setWindVelocity(double velocity) {
@@ -31,6 +33,10 @@ public class Environment {
 		dragCoeff = 0.4;
 	}
 	
+	private void setGravity() {
+		gravity = 9.807;
+	}
+	
 	public double getWindVelocity() {
 		return windVelocity;
 	}
@@ -41,6 +47,10 @@ public class Environment {
 	
 	public double getDragCoeff() {
 		return dragCoeff;
+	}
+	
+	public double getGravity() {
+		return gravity;
 	}
 	
 } // end Environment class
