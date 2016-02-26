@@ -1,5 +1,10 @@
 /**
- * 
+ * This is a test class to solve the path of the firework star using the non-Newtonian
+ * Method.
+ * <p>
+ * An environment, a launch tube, a firework star, a Runge Kutta ODE solver, and a
+ * particle manager are all defined. 
+ * </p>
  * @author zackh_000
  * @version 1.0
  */
@@ -18,14 +23,23 @@ public class FireworkPathSolver {
 	private static RungeKuttaSolver solver;
 	private static ParticleManager manager;
 
-	// Rounds a double number to the supplied number of digits after the decimal place.
+	/**
+	 * A method used to round a number to s specific number of digits after the 
+	 * decimal place. 
+	 * @param num The number to round.
+	 * @param digits The number of digits to round to after the decimal place.
+	 * @return The rounded number.
+	 */
 	public static double round(double num, int digits) {
 		double factor = Math.pow(10.0, digits);
 		return Math.round(num * factor) / factor;
-	}
+	} // end round method
 
-	// Save data to a tab delimited text file. The dataType String is used to generate
-	// the filename.
+	/**
+	 * A method used to write data to a tab delimited text file.
+	 * @param dataType The preferred filename.
+	 * @param points The data to be written.
+	 */
 	public static void writeData(String dataType, double[][] points) {
 		String outputFile = dataType + ".txt";
 		Path file = Paths.get(outputFile);
@@ -39,6 +53,12 @@ public class FireworkPathSolver {
 		}
 	} // end writeData
 
+	/**
+	 * The main method is used to run the simulation for a firework star. The user is
+	 * prompted for an initial wind velocity, a firing angle, and a time interval to
+	 * use for the simulation.
+	 * @param args The standard main input.
+	 */
 	public static void main(String[] args) {
 		String prompt = "Enter the cross-wind velocity in km/hour, between -20 and 20: ";
 		double wind = IOHelper.getDouble(-20, prompt, 20);
@@ -59,7 +79,6 @@ public class FireworkPathSolver {
 			System.err.println(e.getMessage());
 		}
 		st = new Star(tube.getLaunchVX(), tube.getLaunchVXA(), tube.getLaunchVY(), env.getAirDensity(), env.getDragCoeff());
-		System.out.println(st.getDragForce());
 		solver = new RungeKuttaSolver(st, env);
 		try {
 			manager = new ParticleManager(interval, st, solver);

@@ -1,5 +1,8 @@
 /**
- * 
+ * A class to store information used to solve Runge Kutta ordinary differential equations (ODEs).
+ * <p>
+ * The star and the environment that will be solved are stored.
+ * </p>
  * @author zackh_000
  * @version 1.0
  */
@@ -8,6 +11,11 @@ public class RungeKuttaSolver {
 	private Star star;
 	private Environment env;
 	
+	/**
+	 * The constructor for the RungeKuttaSolver class.
+	 * @param fireworkStar The firework star being solved.
+	 * @param environment The environment that the star is being launched in.
+	 */
 	public RungeKuttaSolver(Star fireworkStar, Environment environment) {
 		setStar(fireworkStar);
 		setEnv(environment);
@@ -15,15 +23,19 @@ public class RungeKuttaSolver {
 	
 	private void setStar(Star fireworkStar) {
 		star = fireworkStar;
-	}
+	} // end star mutator
 	
 	private void setEnv(Environment environment) {
 		env = environment;
-	}
+	} // end env mutator
 
-	// This method returns the value of the fx function, given the 
-	// time in seconds and the two velocity components in m/sec.
-	// The meaning of fx is described in the assignment statement.
+	/**
+	 * A method used to solve the fx function for the given star and environment.
+	 * @param time The current time.
+	 * @param vxa The current actual velocity, taking into account wind velocity.
+	 * @param vy The current y velocity.
+	 * @return The value of the fx function.
+	 */
 	public double xDE(double time, double vxa, double vy) {
 		star.setVelocityXA(vxa);
 		star.setVelocityY(vy);
@@ -36,9 +48,13 @@ public class RungeKuttaSolver {
 		return -star.getDragForce() * vxa / (star.getCurrentMass() * star.getVelocityMag());
 	} // end xDE
 
-	// This method returns the value of the fy function, given the 
-	// time in seconds and the two velocity components in m/sec.
-	// The meaning of fy is described in the assignment statement.
+	/**
+	 * A method used to solve the fy function for the given star and environment.
+	 * @param time The current time.
+	 * @param vxa The current actual velocity, taking into account wind velocity.
+	 * @param vy The current y velocity.
+	 * @return The value of the fy function.
+	 */
 	public double yDE(double time, double vxa, double vy) {
 		star.setVelocityXA(vxa);
 		star.setVelocityY(vy);
@@ -49,13 +65,17 @@ public class RungeKuttaSolver {
 		return -env.getGravity() - star.getDragForce() * vy / (star.getCurrentMass() * star.getVelocityMag());
 	} // end yDE
 
+	/**
+	 * A method used to solve a Runge Kutta ODE.
+	 * @param time The current time.
+	 * @param deltaT The time interval being used for this solution.
+	 * @return The x and y component solutions of the ODE.
+	 */
 	public double[] solve(double time, double deltaT) {
 		double q1x, q2x, q3x, q4x, q1y, q2y, q3y, q4y;
 		double halfTime = time + deltaT / 2;
 		double fullTime = time + deltaT;
 		double[] newVals = new double[2];
-		// Use the apparent velocity in the differential equations, so the drag force
-		// is calculated using vxa, rather than just vx.
 		double vx = star.getVelocityX();
 		double vxa = star.getVelocityXA();
 		double vy = star.getVelocityY();
@@ -70,6 +90,6 @@ public class RungeKuttaSolver {
 		newVals[0] = vx + deltaT * (q1x + 2 * q2x + 2 * q3x + q4x) / 6;
 		newVals[1] = vy + deltaT * (q1y + 2 * q2y + 2 * q3y + q4y) / 6;
 		return newVals;
-	} // end estimateVelocity
+	} // end solve
 
 } // end RungeKuttaSolver

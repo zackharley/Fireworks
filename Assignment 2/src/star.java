@@ -22,6 +22,7 @@ public class Star implements ODESystem {
 	private double velocityMag;		// m/s
 	private double area;			// m*m
 	private double dragForce;		// N
+	private double[][] currentValues;
 
 	/**
 	 * A constructor for the Star class.
@@ -130,42 +131,91 @@ public class Star implements ODESystem {
 		area = Math.PI * radius * radius;
 	} // end private area mutator
 
+	/**
+	 * A mutator used to calculate the dragForce on the star.
+	 * @param airDensity The air density of the environment around the Star.
+	 * @param dragCoeff The drag coefficient of the Star in its environment.
+	 */
 	public void setDragForce(double airDensity, double dragCoeff) {
 		dragForce = airDensity * velocityMag * velocityMag * area * dragCoeff / 2;
 	} // end dragForce mutator
+	
+	/**
+	 * A mutator used to set the current values for the Runge Kutta ODE 
+	 * @param values A two dimensional array of new values 
+	 */
+	public void setCurrentValues(double[][] values) {
+		currentValues = values;
+	} // end currentValues mutator
 
+	/**
+	 * The accessor for initialMass.
+	 * @return The initial mass of the star.
+	 */
 	public double getInitialMass() {
 		return initialMass;
 	} // end initialMass Accessor
-
+	
+	/**
+	 * The accessor for burnRate.
+	 * @return The burn rate for the star.
+	 */
 	public double getBurnRate() {
 		return burnRate;
 	} // end burnRate accessor
 
+	/**
+	 * The accessor for currentMass.
+	 * @return The current mass of the star.
+	 */
 	public double getCurrentMass() {
 		return currentMass;
 	} // end currentMass Accessor
 
+	/**
+	 * The accessor for radius.
+	 * @return The radius of the star.
+	 */
 	public double getRadius() {
 		return radius;
 	} //  end radius Accessor
 
+	/**
+	 * The accesor for velocityX.
+	 * @return The x veloxity, not taking into account the wind velocity.
+	 */
 	public double getVelocityX() {
 		return velocityX;
 	} // end velocityX accessor
 
+	/**
+	 * The accesor for velocityXA.
+	 * @return The x actual veloxity, taking into account the wind velocity.
+	 */
 	public double getVelocityXA() {
 		return velocityXA;
 	} // end velocityXA accessor
 
+	/**
+	 * The accesor for velocityY.
+	 * @return The y velocity.
+	 */
 	public double getVelocityY() {
 		return velocityY;
 	} // end velocityY accessor
 
+	/**
+	 * The accessor for velocityMag.
+	 * @return The magnitude of the velocity vector.
+	 */
 	public double getVelocityMag() {
 		return velocityMag;
 	} // end velocityMag Accessor
 
+	/**
+	 * The accessor for dragForce.
+	 * @return The drag force on the star.
+	 */
 	public double getDragForce() {
 		return dragForce;
 	} // end dragForce Accessor
@@ -176,15 +226,8 @@ public class Star implements ODESystem {
 	} //end getSystemSize accessor
 
 	@Override
-	public double[] getCurrentValues() {
-		// TODO Auto-generated method stub
-		return null;
+	public double[][] getCurrentValues() {
+		return currentValues;
 	} //end getCurrentValues accessor
-
-	@Override
-	public double[][] getFunction(double time, double[] values) {
-		// TODO Auto-generated method stub
-		return null;
-	} // end getFunction accessor
-
+	
 } // end Star class
