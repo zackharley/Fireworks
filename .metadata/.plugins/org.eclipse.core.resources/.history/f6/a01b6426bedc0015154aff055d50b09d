@@ -156,35 +156,35 @@ public class Star implements ODESystem {
 
 	public double getVelocityXA() {
 		return velocityXA;
-	} // end velocityXA accessor
+	}
 
 	public double getVelocityY() {
 		return velocityY;
-	} // end velocityY accessor
+	}
 
 	public double getVelocityMag() {
 		return velocityMag;
-	} // end velocityMag Accessor
+	} // end getVelocityMag Accessor
 
 	public double getDragForce() {
 		return dragForce;
-	} // end dragForce Accessor
+	} // end getDragForce Accessor
 
 	@Override
 	public int getSystemSize() {
 		return 2;
-	} //end getSystemSize accessor
+	}
 
 	@Override
 	public double[] getCurrentValues() {
 		// TODO Auto-generated method stub
 		return null;
-	} //end getCurrentValues accessor
+	}
 
 	@Override
 	public double[][] getFunction(double time, double[] values) {
 		// TODO Auto-generated method stub
 		return null;
-	} // end getFunction accessor
+	}
 
 } // end Star class

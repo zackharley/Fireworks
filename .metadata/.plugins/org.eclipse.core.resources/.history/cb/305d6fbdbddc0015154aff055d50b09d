@@ -71,10 +71,7 @@ public class Star implements ODESystem {
 		currentMass = initialMass - time * burnRate;
 	} // end currentMass mutator
 	
-	/**
-	 * A mutator used to determine the volume of the star.
-	 */
-	public void setVolume() {
+	private void setVolume() {
 		volume = currentMass / starDensity;
 	} // end private volume mutator
 
@@ -122,11 +119,8 @@ public class Star implements ODESystem {
 		velocityMag = Math.sqrt(velocityXA * velocityXA + velocityY * velocityY);
 	} // end velocityMag Mutator
 	
-	/**
-	 * A mutator used to change the area of the star. The area value will only
-	 * change if the radius was altered before setArea was called
-	 */
-	public void setArea() {
+	
+	private void setArea() {
 		area = Math.PI * radius * radius;
 	} // end private area mutator
 
@@ -136,55 +130,55 @@ public class Star implements ODESystem {
 
 	public double getInitialMass() {
 		return initialMass;
-	} // end initialMass Accessor
+	}
 
 	public double getBurnRate() {
 		return burnRate;
-	} // end burnRate accessor
+	}
 
 	public double getCurrentMass() {
 		return currentMass;
-	} // end currentMass Accessor
+	} // end getMass Accessor
 
 	public double getRadius() {
 		return radius;
-	} //  end radius Accessor
+	} //  end getRadius Accessor
 
 	public double getVelocityX() {
 		return velocityX;
-	} // end velocityX accessor
+	}
 
 	public double getVelocityXA() {
 		return velocityXA;
-	} // end velocityXA accessor
+	}
 
 	public double getVelocityY() {
 		return velocityY;
-	} // end velocityY accessor
+	}
 
 	public double getVelocityMag() {
 		return velocityMag;
-	} // end velocityMag Accessor
+	} // end getVelocityMag Accessor
 
 	public double getDragForce() {
 		return dragForce;
-	} // end dragForce Accessor
+	} // end getDragForce Accessor
 
 	@Override
 	public int getSystemSize() {
 		return 2;
-	} //end getSystemSize accessor
+	}
 
 	@Override
 	public double[] getCurrentValues() {
 		// TODO Auto-generated method stub
 		return null;
-	} //end getCurrentValues accessor
+	}
 
 	@Override
 	public double[][] getFunction(double time, double[] values) {
 		// TODO Auto-generated method stub
 		return null;
-	} // end getFunction accessor
+	}
 
 } // end Star class

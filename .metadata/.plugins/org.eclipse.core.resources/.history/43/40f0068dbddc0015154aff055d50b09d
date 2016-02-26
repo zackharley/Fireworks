@@ -29,9 +29,7 @@ public class RungeKuttaSolver {
 		star.setVelocityY(vy);
 		star.setVelocityMag();
 		star.setCurrentMass(time);
-		star.setVolume();
 		star.setRadius();
-		star.setArea();
 		star.setDragForce(env.getAirDensity(), env.getDragCoeff());
 		return -star.getDragForce() * vxa / (star.getCurrentMass() * star.getVelocityMag());
 	} // end xDE
