@@ -33,6 +33,10 @@ public class Star implements ODESystem {
 		initialMass = 0.008;
 	}
 
+	private void setInitialMass(double mass) {
+		initialMass = mass;
+	}
+
 	private void setBurnRate() {
 		burnRate = 0.0030;
 	}
