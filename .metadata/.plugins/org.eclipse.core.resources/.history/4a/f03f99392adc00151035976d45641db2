@@ -1,0 +1,52 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class Star implements ODESystem {
+	
+	private double currentMass;
+	private double burnRate;
+	private double starDensity;
+
+	public Star() {
+		
+	} // end full constructor
+	
+	@Override
+	public int getSystemSize() {
+		return 2;
+	}
+
+	@Override
+	public double[] getCurrentValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double[] getFunction(double time, double[] values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public double getMass(double time) {
+		return currentMass - time * burnRate;
+	} // end getMass Accessor
+	
+	/**
+	 * 
+	 * @param time
+	 * @return The <code>double</double> radius of the star at the given time
+	 */
+	public double getRadius(double time) {
+		double volume = getMass(time) / starDensity;
+		return Math.pow(3 * volume / (4 * Math.PI), 1.0 / 3.0);
+	} // end getRadius Accessor
+
+} // end Star class

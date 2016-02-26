@@ -1,0 +1,32 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class Environment {
+	
+	private double windVelocity;	// m/s
+	private double airDensity;		// kg/m*m*m
+	private double dragCoeff;		// unitless
+	
+	public Environment(double windV) throws IllegalWindVelocityException {
+		if (windV > 20 || windV < 20){
+			throw new IllegalLaunchVelocityException("The supplied wind velocity was not" +
+					"between -20 and 20 m/s inclusive.");
+		}
+		windVelocity = windV;
+	} // end full constructor
+
+	private void setAirDensity() {
+		airDensity = 1.2;
+	}
+	
+	private void setDragCoeff() {
+		
+	}
+	
+	public double getAirDensity() {
+		return airDensity;
+	}
+	
+} // end Environment class

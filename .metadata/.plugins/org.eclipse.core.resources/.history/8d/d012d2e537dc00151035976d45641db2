@@ -1,0 +1,15 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class LaunchTube {
+	
+	private double launchVMag;
+	private double launchVX;
+	
+	 public LaunchTube() throws IllegalLaunchAngleException {
+		 
+	 } // end full constructor
+	 
+} // end LaunchTube class

@@ -1,0 +1,11 @@
+
+public class IllegalTimeIntervalException extends Exception {
+	
+	public IllegalTimeIntervalException() {
+		super("");
+	}
+	
+	public IllegalTimeIntervalException(String message) {
+		super(message);
+	}
+}

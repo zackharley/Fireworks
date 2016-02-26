@@ -1,0 +1,16 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class FireworkPathSolver {
+
+	private Star st;
+	private Environment env;
+	private LaunchTube tube;
+	
+	public static void main(String[] args) {
+		
+	} // end main method
+	
+} // end FireworkPathSolver class

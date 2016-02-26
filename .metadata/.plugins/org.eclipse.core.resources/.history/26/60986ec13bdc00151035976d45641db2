@@ -1,0 +1,32 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class FireworkPathSolver {
+
+	private Star st;
+	private Environment env;
+	private LaunchTube tube;
+	private ParticleManager manager;
+	
+	// Save data to a tab delimited text file. The dataType String is used to generate
+		// the filename.
+		public static void writeData(String dataType, double[][] points) {
+			String outputFile = dataType + ".txt";
+			Path file = Paths.get(outputFile);
+			try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+				writer.write("seconds\tx (metres)\ty (metres)\r\n");
+				for (double[] row : points)
+					writer.write(round(row[0], 3) + "\t" + round(row[1], 3) +
+							"\t" + round(row[2], 3) + "\r\n"); 
+			} catch (IOException err) {
+				System.err.println(err.getMessage());
+			}
+		} // end writeData
+	
+	public static void main(String[] args) {
+		
+	} // end main method
+	
+} // end FireworkPathSolver class

@@ -1,0 +1,8 @@
+
+public class FireworkPathSolver {
+
+	public static void main(String[] args) {
+		
+	} // end main method
+	
+} // end FireworkPathSolver class

@@ -1,0 +1,12 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class LaunchTube {
+	
+	 public LaunchTube() {
+		 
+	 } // end full constructor
+	 
+} // end LaunchTube class

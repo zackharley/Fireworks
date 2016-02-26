@@ -1,0 +1,198 @@
+/*
+ * A sample solution to assignment 1.
+ * 
+ * This program calculates the path of a single Roman Candle star, given
+ * the wind velocity and launch angle, supplied by the user. One model takes
+ * into account the drag force on the star, and the other calculates the path
+ * for Newtonian movement only - without drag.  The characteristics
+ * of the star are detailed on the assignments page.
+ * 
+ * by Alan McLeod
+ */
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class manager {
+	public static final double G = 9.807;  			// m/s*s
+	public static final double DENSITY_AIR = 1.2;	// kg/m*m*m
+	public static final double DRAG_COEFF = 0.4;	// unitless
+	public static final double EXIT_VELOCITY = 22;	// m/sec
+	public static final double BURN_RATE = 0.0030;	// kg/second
+	public static final double DENSITY_STAR = 1900;	// kg/m*m*m
+	public static final double STARTING_MASS = 0.008;	// kg
+
+	public static final double DELTA_T = 0.05;		// seconds
+	
+	// Returns the mass of the star at the supplied time.
+	// Time is in seconds and the returned mass in kg.
+	public static double getMass(double time) {
+		return STARTING_MASS - time * BURN_RATE;
+	} // end getMass
+	
+	// Returns the radius of the star at the supplied time.
+	// Time is in seconds and the returned radius is in metres.
+	public static double getRadius(double time) {
+		double volume = getMass(time) / DENSITY_STAR;
+		return Math.pow(3 * volume / (4 * Math.PI), 1.0 / 3.0);
+	} // end getRadius
+	
+	// Returns the velocity magnitude in m/sec, given the two
+	// velocity components.
+	public static double getVelocityMag(double vxa, double vy) {
+		return Math.sqrt(vxa * vxa + vy * vy);
+	} // end getVelocity
+	
+	// Calculates the magnitude of the drag force on the star, given time in
+	// seconds and the two velocity components in m/sec.
+	public static double getDragForce(double time, double vxa, double vy) {
+		double velocityMag = getVelocityMag(vxa, vy);
+		double radius = getRadius(time);
+		double area = Math.PI * radius * radius;
+		return DENSITY_AIR * velocityMag * velocityMag * area * DRAG_COEFF / 2;
+	} // end getDragForce
+	
+	// This method returns the value of the fx function, given the 
+	// time in seconds and the two velocity components in m/sec.
+	// The meaning of fx is described in the assignment statement.
+	public static double xDE(double time, double vxa, double vy) {
+		double velocityMag = getVelocityMag(vxa, vy);
+		double mass = getMass(time);
+		double dragForce = getDragForce(time, vxa, vy);
+		return -dragForce * vxa / (mass * velocityMag);
+	} // end xDE
+	
+	// This method returns the value of the fy function, given the 
+	// time in seconds and the two velocity components in m/sec.
+	// The meaning of fy is described in the assignment statement.
+	public static double yDE(double time, double vxa, double vy) {
+		double velocityMag = getVelocityMag(vxa, vy);
+		double mass = getMass(time);
+		double dragForce = getDragForce(time, vxa, vy);
+		return -G - dragForce * vy / (mass * velocityMag);
+	} // end yDE
+	
+	// This method applies the Runge-Kutta ODE solver technique to estimate the
+	// velocity components for the time: (time + DELTA_T).  The time and the 
+	// velocity components at "time" are supplied.  The components are returned in an
+	// array of size two, where the first value is the x component and the second
+	// value is the y component of velocity in m/sec.
+	public static double[] estimateVelocity(double time, double vx, double vy, double vWind) {
+		double q1x, q2x, q3x, q4x, q1y, q2y, q3y, q4y;
+		double halfTime = time + DELTA_T / 2;
+		double fullTime = time + DELTA_T;
+		double[] newVals = new double[2];
+		// Use the apparent velocity in the differential equations, so the drag force
+		// is calculated using vxa, rather than just vx.
+		double vxa = vx - vWind;
+		q1x = xDE(time, vxa, vy);
+		q1y = yDE(time, vxa, vy);
+		q2x = xDE(halfTime, vxa + DELTA_T * q1x / 2, vy + DELTA_T * q1y / 2);
+		q2y = yDE(halfTime, vxa + DELTA_T * q1x / 2, vy + DELTA_T * q1y / 2);
+		q3x = xDE(halfTime, vxa + DELTA_T * q2x / 2, vy + DELTA_T * q2y / 2);
+		q3y = yDE(halfTime, vxa + DELTA_T * q2x / 2, vy + DELTA_T * q2y / 2);
+		q4x = xDE(fullTime, vxa + DELTA_T * q3x, vy + DELTA_T * q3y);
+		q4y = yDE(fullTime, vxa + DELTA_T * q3x, vy + DELTA_T * q3y);
+		newVals[0] = vx + DELTA_T * (q1x + 2 * q2x + 2 * q3x + q4x) / 6;
+		newVals[1] = vy + DELTA_T * (q1y + 2 * q2y + 2 * q3y + q4y) / 6;
+		return newVals;
+	} // end estimateVelocity
+	
+	// This method calculates and returns the estimated path for a single star using the
+	// non-Newtonian equations of motion.
+	// The method must be supplied with the two initial velocity components for the
+	// star at time=0, in m/sec, as well as the wind velocity which is assumed to be constant. 
+	// The method also assumes that the starting position of the star is (0, 0).
+	// The path is returned as a two-dimensional array, where the first column is time in
+	// seconds, the second column is x in metres and the third column is y in metres.
+	public static double[][] getPath (double vxInitial, double vyInitial, double vWind) {
+		int numPoints = (int)Math.round(STARTING_MASS / BURN_RATE / DELTA_T) + 1;
+		double[][] points = new double[numPoints][3];
+		double[] newVals = new double[2];
+		double vx, vy;
+		double time = 0;
+		// Assign the time=0 point
+		points[0][0] = time;
+		points[0][1] = 0;
+		points[0][2] = 0;
+		// Calculate the rest of the points
+		vx = vxInitial;
+		vy = vyInitial;
+		for (int i = 1; i < numPoints; i++) {
+			newVals = estimateVelocity(time, vx, vy, vWind);
+			vx = newVals[0];
+			vy = newVals[1];
+			time = time + DELTA_T;
+			points[i][0] = time;
+			// Calculation the positions
+			points[i][1] = points[i - 1][1] + vx * DELTA_T;
+			points[i][2] = points[i - 1][2] + vy * DELTA_T;
+		}
+		return points;
+	} // end getPath
+	
+	// This method calculates and returns the path for a single star assuming just
+	// Newtonian physics for the equations of motion - no drag is involved.
+	// The method must be supplied with the two initial velocity components for the
+	// star at time=0, in m/sec. 
+	// The method also assumes that the starting position of the star is (0, 0).
+	// The path is returned as a two-dimensional array, where the first column is time in
+	// seconds, the second column is x in metres and the third column is y in metres.
+	public static double[][] getNewtonianPath (double vxInitial, double vyInitial) {
+		int numPoints = (int)Math.round(STARTING_MASS / BURN_RATE / DELTA_T) + 1;
+		double[][] points = new double[numPoints][3];
+		double time = 0;
+		// Calculate the points
+		for (int i = 0; i < numPoints; i++) {
+			points[i][0] = time;
+			points[i][1] = vxInitial * time;
+			points[i][2] = vyInitial * time - 0.5 * G * time * time;
+			time = time + DELTA_T;
+		}
+		return points;		
+	} // end getNewtonianPath
+	
+	// Rounds a double number to the supplied number of digits after the decimal place.
+	public static double round(double num, int digits) {
+		double factor = Math.pow(10.0, digits);
+		return Math.round(num * factor) / factor;
+	}
+	
+	// Save data to a tab delimited text file. The dataType String is used to generate
+	// the filename.
+	public static void writeData(String dataType, double[][] points) {
+		String outputFile = dataType + ".txt";
+		Path file = Paths.get(outputFile);
+		try (BufferedWriter writer = Files.newBufferedWriter(file)) {
+			writer.write("seconds\tx (metres)\ty (metres)\r\n");
+			for (double[] row : points)
+				writer.write(round(row[0], 3) + "\t" + round(row[1], 3) +
+						"\t" + round(row[2], 3) + "\r\n"); 
+		} catch (IOException err) {
+			System.err.println(err.getMessage());
+		}
+	} // end writeData
+
+	// The main method obtains the wind velocity and firing angle from the user using
+	// the getDouble() method from the IOHelper class.  This method will re-prompt the user
+	// if the value supplied is not within the provided ranges.
+	// Then main obtains the star path and displays the results for both Newtonian and
+	// Non-Newtonian equations of motion.
+	public static void main(String[] args) {
+		String prompt = "Enter the cross-wind velocity in km/hour, between -20 and 20: ";
+		double wind = IOHelper.getDouble(-20, prompt, 20);
+		prompt = "Enter the firing angle in degrees between -15 and 15: ";
+		double angle = IOHelper.getDouble(-15, prompt, 15);
+		wind = wind * 1000. / 3600.;		// convert to m/sec
+		angle = angle * Math.PI / 180.;		// convert to radians
+		double v0x = EXIT_VELOCITY * Math.sin(angle);
+		double v0y = EXIT_VELOCITY * Math.cos(angle);
+		writeData("Newtonian", getNewtonianPath(v0x, v0y));
+		writeData("NonNewtonian", getPath(v0x, v0y, wind));
+		System.out.println("Done");
+	} // end main
+
+} // end Assn1_NetID

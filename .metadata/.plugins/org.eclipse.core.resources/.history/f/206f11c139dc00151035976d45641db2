@@ -1,0 +1,27 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class Environment {
+	
+	private double airDensity;		// kg/m*m*m
+	private double dragCoeff;		// unitless
+	
+	public Environment() throws IllegalWindVelocityException {
+		
+	} // end full constructor
+
+	private void setAirDensity() {
+		airDensity = 
+	}
+	
+	private void setDragCoeff() {
+		
+	}
+	
+	public double getAirDensity() {
+		return airDensity;
+	}
+	
+} // end Environment class

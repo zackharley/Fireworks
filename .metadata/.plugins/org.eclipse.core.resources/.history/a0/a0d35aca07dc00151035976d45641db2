@@ -1,0 +1,12 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class LaunchTube {
+
+	public static void main(String[] args) {
+		
+	} // end main method
+	
+} // end LaunchTube class

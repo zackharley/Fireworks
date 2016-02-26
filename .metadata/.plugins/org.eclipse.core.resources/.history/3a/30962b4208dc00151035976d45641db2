@@ -1,0 +1,29 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+public class Star implements ODESystem {
+
+	public Star() {
+		
+	}
+	
+	@Override
+	public int getSystemSize() {
+		return 2;
+	}
+
+	@Override
+	public double[] getCurrentValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double[] getFunction(double time, double[] values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+} // end Star class

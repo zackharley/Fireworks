@@ -1,0 +1,22 @@
+
+public class example implements ODESystem {
+
+	@Override
+	public int getSystemSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double[] getCurrentValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double[] getFunction(double time, double[] values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

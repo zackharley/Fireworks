@@ -1,0 +1,13 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+
+public class ParticleManager {
+	
+	public ParticleManager(ODESystem star) throws IllegalTimeIntervalException {
+		
+	} // end full constructor
+
+} // end ParticleManager class

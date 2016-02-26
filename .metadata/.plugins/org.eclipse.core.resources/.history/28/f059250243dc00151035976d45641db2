@@ -1,0 +1,23 @@
+/**
+ * 
+ * @author zackh_000
+ * @version 1.0
+ */
+
+public class ParticleManager {
+	
+	private double deltaT;
+	
+	public ParticleManager(double timeInterval, ODESystem star) throws IllegalTimeIntervalException {
+		setDeltaT(timeInterval);
+	} // end full constructor
+	
+	private void setDeltaT (double interval) {
+		deltaT = interval;
+	}
+	
+	private double getDeltaT() {
+		return deltaT;
+	}
+	
+} // end ParticleManager class
